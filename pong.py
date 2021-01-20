@@ -30,29 +30,13 @@ r.start()
 
 
 #toda la documetación en glowscript
-scene.range = 4
-my_sphere = sphere(pos = vector(0,0,0), radius = 0.25, texture=textures.earth)
-wall1 = box(pos = vector(4,0,0), size = vector(0.1,1,1), texture=textures.metal)
-wall2 = box(pos = vector(-4,0,0), size = vector(0.1,1,1), texture=textures.metal)
 
-backWall = box(pos = vector(0,0,-3),size = vector(19,12,1), texture=textures.wood)
 # topWall = box(pos = vector(0,3,))
 
 # for animate an object you need a loop
-score1 = 0
-score2 = 0
-time = 0 #Time in the simulation
-dt = 0.091#Time step size
-T = text(text='Pong game',pos=vector(-2.9,2,0), color=color.red)
-scorePlayer1 = text(text=str(score1),pos=vector(-4.9,2,0), color=color.orange)
-scorePlayer2 = text(text=str(score2),pos=vector(4.9,2,0), color=color.purple)
+
 #Configuration for the key events
-v = vec(0,0,0)
-dw = 0.2
-dz = 0.1
-v1 = vec(0,0,0)
-dw1 = 0.2
-dz1 = 0.1
+
 # while True:
 #     rate(30)
 #     k = keysdown() # a list of keys that are down
@@ -61,12 +45,52 @@ dz1 = 0.1
 #     if 'down' in k: v.y -= dw
 #     if 'up' in k: v.y += dw
 #     wall2.pos += v*dz
+scene.range = 4
+my_sphere = sphere(pos = vector(0,0,0), radius = 0.25, texture=textures.earth, visible = False)
+wall1 = box(pos = vector(4,0,0), size = vector(0.1,1,1), texture=textures.metal, visible = False)
+wall2 = box(pos = vector(-4,0,0), size = vector(0.1,1,1), texture=textures.metal, visible = False)
+score1 = 0
+score2 = 0
 
+dt = 0.091#Time step size
+v = vec(0,0,0)
+dw = 0.2
+dz = 0.1
+v1 = vec(0,0,0)
+dw1 = 0.2
+dz1 = 0.1
 collided1 = False
 collided2 = False
 initialState = True
 rebound = 0
 valuesForRebound = [.01,-.01,0,.03,-.03,.05,-.05]
+def printing():
+    global tAbout, tLastNAme
+    tAbout.visible = True
+    tLastNAme.visible = True
+
+tAbout = text(text = "Developed by:\nEduardo Domínguez", pos = vector(-4.4, 2, -1.8),visible = False)
+tLastNAme = text(text = "Cordero", pos = vector(-4.4,-1,-1.8), visible = False)
+backWall = box(pos = vector(0,0,-3),size = vector(19,12,1), texture=textures.wood)
+T = text(text='Pong game',pos=vector(-2.9,2,0), color=color.red, visible = False)
+scorePlayer1 = text(text=str(score1),pos=vector(-4.9,2,0), color=color.orange, visible = False)
+scorePlayer2 = text(text=str(score2),pos=vector(4.9,2,0), color=color.purple, visible = False)
+bAbout = button(text = "About",pos = scene.title_anchor, bind = printing)
+bInstructions = button(text = "How to play",pos = scene.title_anchor, bind = printing)
+bPlay = button(text = "Play",pos = scene.title_anchor, bind = printing)
+time = 0 #Time in the simulation
+
+
+
+def constructorMainGame():
+    global scorePlayer1, scorePlayer2, T
+    # scorePlayer1.visible = False
+    # scorePlayer2.visible = False
+    # T.visible = False
+    play = False
+    bAbout.visible = True
+    bInstructions.visible = True
+    
 
 def mainGame():
     global time, my_sphere, dt, v, dw, dw1, wall1, wall2, collided1, collided2, shot
@@ -175,4 +199,4 @@ def menuGame():
     tWelcome = Text()
 
 
-mainGame()
+constructorMainGame()
