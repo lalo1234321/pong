@@ -65,10 +65,49 @@ initialState = True
 rebound = 0
 valuesForRebound = [.01,-.01,0,.03,-.03,.05,-.05]
 def printing():
-    global tAbout, tLastNAme
+    global tAbout, tLastNAme, tMove, tPlayer1, tPlayer2
     tAbout.visible = True
     tLastNAme.visible = True
+    tMove.visible = False
+    tPlayer1.visible = False
+    tPlayer2.visible = False
 
+def instructions():
+    global tAbout, tLastNAme, tMove, tPlayer1, tPlayer2
+    tAbout.visible = False
+    tLastNAme.visible = False
+    tMove.visible = True
+    tPlayer1.visible = True
+    tPlayer2.visible = True
+
+def playGame():
+    global tAbout, tLastNAme, tMove, tPlayer1, tPlayer2, T, scorePlayer1, scorePlayer2
+    global bAbout, bInstructions, bPlay, scorePlayer1, scorePlayer2, T
+    global my_sphere, wall1, wall2
+    tAbout.visible = False
+    tLastNAme.visible = False
+    tMove.visible = False
+    tPlayer1.visible = False
+    tPlayer2.visible = False
+    T.visible = True
+    scorePlayer1.visible = True
+    scorePlayer2.visible = True
+    bAbout.disabled = True
+    bInstructions.disabled = True 
+    bPlay.disabled = True
+    scorePlayer1.visible = True
+    scorePlayer2.visible = True
+    T.visible = True
+    wall1.visible = True
+    wall2.visible = True
+    my_sphere.visible = True
+    mainGame()
+
+
+
+tMove = text(text = "Move with:", pos = vector(-3,3,-1),visible = False)
+tPlayer1 = text(text = "Player 1: W  S",pos = vector(-3,1,-1), visible = False)
+tPlayer2 = text(text = "Player 2: upKey \ndownKey", pos = vector(-6,-1,-1), visible = False)
 tAbout = text(text = "Developed by:\nEduardo Domínguez", pos = vector(-4.4, 2, -1.8),visible = False)
 tLastNAme = text(text = "Cordero", pos = vector(-4.4,-1,-1.8), visible = False)
 backWall = box(pos = vector(0,0,-3),size = vector(19,12,1), texture=textures.wood)
@@ -76,8 +115,8 @@ T = text(text='Pong game',pos=vector(-2.9,2,0), color=color.red, visible = False
 scorePlayer1 = text(text=str(score1),pos=vector(-4.9,2,0), color=color.orange, visible = False)
 scorePlayer2 = text(text=str(score2),pos=vector(4.9,2,0), color=color.purple, visible = False)
 bAbout = button(text = "About",pos = scene.title_anchor, bind = printing)
-bInstructions = button(text = "How to play",pos = scene.title_anchor, bind = printing)
-bPlay = button(text = "Play",pos = scene.title_anchor, bind = printing)
+bInstructions = button(text = "How to play",pos = scene.title_anchor, bind = instructions)
+bPlay = button(text = "Play",pos = scene.title_anchor, bind = playGame)
 time = 0 #Time in the simulation
 
 
@@ -90,7 +129,7 @@ def constructorMainGame():
     play = False
     bAbout.visible = True
     bInstructions.visible = True
-    
+
 
 def mainGame():
     global time, my_sphere, dt, v, dw, dw1, wall1, wall2, collided1, collided2, shot
