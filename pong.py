@@ -5,25 +5,27 @@ import random
 import vlc
 
 # Configuraciones de la musica
-music = "/home/theowl/Documents/music/projects/game.mp3"
-music1 = "/home/theowl/Documents/music/projects/gamePart2.mp3"
-shot = "/home/theowl/Documents/music/projects/shot.mp3"
-border = "/home/theowl/Documents/music/projects/borderSound.mp3"
-win = "/home/theowl/Documents/music/projects/win.mp3"
+music = "./projects/game.mp3"
+music1 = "./projects/gamePart2.mp3"
+music2 = "./projects/gamePart3.mp3"
+music3 = "./projects/gamePart4.mp3"
+shot = "./projects/shot.mp3"
+border = "./projects/borderSound.mp3"
+win = "./projects/win.mp3"
 # Iniciando con la primera cancion
-p = vlc.MediaPlayer(music)
+p = vlc.MediaPlayer(music1)
 p.play()
-
+musicList = [music,music2, music3]
 
 playAgain = False
-def twoArgs(arg1,arg2):
-    print (arg1)
-    pSecond = vlc.MediaPlayer(arg2)
-    pSecond.play()
-    p.stop()
+# def twoArgs(arg1,arg2):
+#     print (arg1)
+#     pSecond = vlc.MediaPlayer(arg2)
+#     pSecond.play()
+#     p.stop()
 
-r = Timer(77.0,twoArgs,("ejecutando",music1))
-r.start()
+# r = Timer(77.0,twoArgs,("ejecutando",music1))
+# r.start()
 
 
 
@@ -65,25 +67,34 @@ initialState = True
 rebound = 0
 valuesForRebound = [.01,-.01,0,.03,-.03,.05,-.05]
 def printing():
-    global tAbout, tLastNAme, tMove, tPlayer1, tPlayer2
+    global tAbout, tLastNAme, tMove, tPlayer1, tPlayer2, tWin, T
     tAbout.visible = True
     tLastNAme.visible = True
     tMove.visible = False
     tPlayer1.visible = False
     tPlayer2.visible = False
+    tWin.visible = False
+    T.visible = False
 
 def instructions():
-    global tAbout, tLastNAme, tMove, tPlayer1, tPlayer2
+    global tAbout, tLastNAme, tMove, tPlayer1, tPlayer2, tWin,T
     tAbout.visible = False
     tLastNAme.visible = False
     tMove.visible = True
     tPlayer1.visible = True
     tPlayer2.visible = True
+    tWin.visible = False
+    T.visible = False
 
 def playGame():
     global tAbout, tLastNAme, tMove, tPlayer1, tPlayer2, T, scorePlayer1, scorePlayer2
     global bAbout, bInstructions, bPlay, scorePlayer1, scorePlayer2, T
-    global my_sphere, wall1, wall2
+    global my_sphere, wall1, wall2, tWin, p
+    p.stop()
+    p1 = vlc.MediaPlayer(random.choice(musicList))
+    p1.play()
+    resetValues()
+    tWin.visible = False
     tAbout.visible = False
     tLastNAme.visible = False
     tMove.visible = False
@@ -101,10 +112,10 @@ def playGame():
     wall1.visible = True
     wall2.visible = True
     my_sphere.visible = True
-    mainGame()
+    mainGame(p1)
 
 
-
+tWin = text(text='You have won',pos=vector(-3.4,0,0), color=color.red, visible = False)
 tMove = text(text = "Move with:", pos = vector(-3,3,-1),visible = False)
 tPlayer1 = text(text = "Player 1: W  S",pos = vector(-3,1,-1), visible = False)
 tPlayer2 = text(text = "Player 2: upKey \ndownKey", pos = vector(-6,-1,-1), visible = False)
@@ -121,6 +132,24 @@ time = 0 #Time in the simulation
 
 
 
+def resetValues():
+    global score1, score2, dt, v, v1, dw, dw1, dz1, dz, collided1, collided2
+    global initialState, rebound, time
+    score1 = 0
+    score2 = 0
+    dt = 0.091#Time step size
+    v = vec(0,0,0)
+    dw = 0.2
+    dz = 0.1
+    v1 = vec(0,0,0)
+    dw1 = 0.2
+    dz1 = 0.1
+    collided1 = False
+    collided2 = False
+    initialState = True
+    rebound = 0
+    time = 0 #Time in the simulation
+
 def constructorMainGame():
     global scorePlayer1, scorePlayer2, T
     # scorePlayer1.visible = False
@@ -131,9 +160,10 @@ def constructorMainGame():
     bInstructions.visible = True
 
 
-def mainGame():
+def mainGame(gameMusic):
     global time, my_sphere, dt, v, dw, dw1, wall1, wall2, collided1, collided2, shot
     global rebound, initialState, score1, scorePlayer1, score2, scorePlayer2
+    global bAbout, bInstructions, bPlay, tWin
     # rate control de fps
     while(time<=1000):
         rate(50)
@@ -213,12 +243,15 @@ def mainGame():
             scorePlayer2 = text(text=str(score2),pos=vector(4.9,2,0), color=color.purple)
             my_sphere.pos.x=0
         elif score1==3 or score2==3:
+            gameMusic.stop()
             p.stop()
             p3 = vlc.MediaPlayer(win)
             p3.play()
-            tWin = text(text='You have won',pos=vector(-3,0,0), color=color.red)
-            score1 = 0
-            score2 = 0
+            tWin.visible = True
+            bAbout.disabled = False
+            bInstructions.disabled = False 
+            bPlay.disabled = False
+            bPlay.text = "Play again"
             playAgain = True
             break
         elif wall1.pos.y<-2.9:
